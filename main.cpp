@@ -11,8 +11,8 @@ using std::ostream;
 unsigned long long int Fibonacci(unsigned int n);
 void PrintReverseString(const string& str, ostream& output = cout);
 // You may change the parameters of these functions
-size_t MinimumPosition(const int array[], size_t size);
-void SelectionSort(int array[], size_t size);
+size_t MinimumPosition(const int array[], size_t size, size_t pos);
+void SelectionSort(int array[], size_t size, size_t index);
 
 
 int main() {
@@ -49,7 +49,7 @@ int main() {
 
 	cout << "Testing Minimum Position Finding" << endl;
 	for (int i = 0; i < TESTS; ++i) {
-		minimumResponses[i] = MinimumPosition(data[i], ELEMENTS);
+		minimumResponses[i] = MinimumPosition(data[i], ELEMENTS,0);
 		if (minimumResponses[i] == minimumSolutions[i]){
 			cout << "\tPassed " << ++passed << " tests" << endl;
 		}
@@ -57,7 +57,7 @@ int main() {
 	cout << "Testing Sorting" << endl;
 	bool equal;
 	for (int i = 0; i < TESTS; ++i) {
-		SelectionSort(data[i], ELEMENTS);
+		SelectionSort(data[i], ELEMENTS,0);
 		equal = true;
 		for (int j = 0; j < ELEMENTS; ++j) {
 			if (data[i][j] != sortedArrays[i][j]){
@@ -85,14 +85,42 @@ int main() {
 }
 
 unsigned long long int Fibonacci(unsigned int n){
-	return 0;
+    if (n == 1 || n== 0)
+	return n;
+    else return Fibonacci(n-1) + Fibonacci(n-2);
 }
 void PrintReverseString(const string& str, ostream& output){
+    if (str.size() == 0) {
+        return;
+    }
+    PrintReverseString(str.substr(1), output);
+    output << str[0];
 }
 // You may change the parameters of these functions
-size_t MinimumPosition(const int array[], size_t size){
-	return 0;
-}
-void SelectionSort(int array[], size_t size){
+size_t MinimumPosition(const int array[], size_t size, size_t pos){
+   /* if (size <= 1)
+        return 0;
 
+    size_t k = MinimumPosition(array, --size);
+    return array[size] < array[k] ? size : k;*/
+   if ( pos == size)
+       return pos;
+   size_t k = MinimumPosition(array, size, pos + 1);
+   return (array[pos] < array[k]) ? pos : k;
 }
+
+void SelectionSort(int array[], size_t size, size_t index) {
+    size_t temp;
+    if (index == size)
+        return;
+    size_t k = MinimumPosition(array,size-1, index);
+    if (k!=index) {
+       // swap(array[k], array[index]);
+        temp = array[k];
+        array[k] = array[index];
+        array[index] = temp;
+    }
+
+    SelectionSort(array, size, index + 1);
+}
+
